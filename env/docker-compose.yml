@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  web:
+    container_name: web
+    build:
+      args:
+        user: appuser
+        uid: 1000
+      context: ./docker_context/php
+      dockerfile: Dockerfile
+    ports:
+      - "9000"
+    volumes:
+      - ../source:/var/www/html/
+  nginx:
+    container_name: nginx
+    build:
+      context: ./docker_context/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ../source:/var/www/html/
+      - ./config/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  mysql:
+    container_name: db
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=1 --character-set-server=utf8mb4  --collation-server=utf8mb4_unicode_ci
+    ports:
+      - 3306:3306
+    env_file: .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_data_bk:/opt/mysql/backup
+volumes:
+  mysql_data:
+  mysql_data_bk:

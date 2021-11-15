@@ -1,0 +1,6 @@
+frontend
+backend
+.vagrant
+mysql_data
+mysql_data_bk
+admin
